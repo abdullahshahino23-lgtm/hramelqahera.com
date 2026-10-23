@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم هرم القاهرة | المنيو والطلب المباشر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#273156',
+                        navyDark: '#1b223d',
+                        terracotta: '#ba5a28',
+                        brandYellow: '#f7d117',
+                        brandRed: '#9e2a2b',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #1b223d;
+            color: #ffffff;
+            padding-bottom: 110px;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .category-btn.active {
+            background-color: #f7d117;
+            color: #1b223d;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(247, 209, 23, 0.3);
+        }
+        .menu-card {
+            background: linear-gradient(145deg, #273156, #1f2746);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .menu-card:hover {
+            border-color: #f7d117;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header & Identity -->
+    <header class="bg-navy border-b-4 border-terracotta relative overflow-hidden shadow-xl">
+        <div class="max-w-3xl mx-auto px-4 pt-6 pb-4 text-center">
+            
+            <!-- Logo & Title -->
+            <div class="inline-flex flex-col items-center justify-center mb-2">
+                <svg class="w-24 h-20" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60 8L10 90H110L60 8Z" stroke="#e65c24" stroke-width="6" stroke-linejoin="round"/>
+                    <path d="M60 22L38 55H82L60 22Z" fill="#f7d117"/>
+                    <text x="60" y="75" text-anchor="middle" fill="#f59e0b" font-family="Cairo" font-weight="900" font-size="18">القاهرة</text>
+                    <text x="60" y="96" text-anchor="middle" fill="#e65c24" font-family="sans-serif" font-weight="bold" font-size="8" letter-spacing="3">ABO NOUR</text>
+                </svg>
+                <div class="mt-1">
+                    <span class="text-brandYellow text-lg font-bold block -mb-2">هرم</span>
+                    <h1 class="text-4xl font-black tracking-wide text-white drop-shadow-md">القاهرة</h1>
+                    <span class="bg-brandRed text-white text-xs font-bold px-3 py-0.5 rounded-sm inline-block mt-1">مطعم</span>
+                </div>
+            </div>
+
+            <!-- Location & Contact Banner -->
+            <div class="bg-brandYellow text-navyDark rounded-xl p-3 mt-3 shadow-md flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                    <span>📍 نجران - مفرق الخميس - خلف مستوصف السلامة (شارع السمك)</span>
+                </div>
+                <a href="tel:0548108774" class="bg-navyDark text-brandYellow px-4 py-1.5 rounded-lg font-black text-base flex items-center gap-2 hover:opacity-90 transition">
+                    <span>📞 0548108774</span>
+                </a>
+            </div>
+
+            <!-- Quick Inquiry Button -->
+            <div class="mt-3">
+                <button onclick="openInquiryModal()" class="w-full bg-navyDark/80 border border-brandYellow/40 text-brandYellow py-2 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-navyDark transition shadow">
+                    <span>💬 لدي استفسار أو طلب خاص للعزائم والولائم</span>
+                </button>
+            </div>
+
+            <!-- Freebies Notice -->
+            <p class="text-brandYellow text-xs sm:text-sm font-semibold mt-3">
+                ✨ الخبز والمخلل وماء السلطة مجاناً | السلطات والطحينة خارج الطلبات ✨
+            </p>
+        </div>
+    </header>
+
+    <!-- Category Navigation -->
+    <nav class="sticky top-0 z-30 bg-navyDark/95 backdrop-blur-md border-b border-white/10 py-3 px-4 shadow-md">
+        <div class="max-w-3xl mx-auto flex gap-2 overflow-x-auto no-scrollbar" id="category-tabs">
+            <button onclick="filterMenu('all')" class="category-btn active whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">الكل</button>
+            <button onclick="filterMenu('koshary')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">الكشري</button>
+            <button onclick="filterMenu('meat')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">وجبات اللحوم</button>
+            <button onclick="filterMenu('poultry')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">الدجاج والبط</button>
+            <button onclick="filterMenu('samin')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">وجبات السمين</button>
+            <button onclick="filterMenu('sandwiches')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">السندوتشات</button>
+            <button onclick="filterMenu('addons')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">الإضافات والمشروبات</button>
+        </div>
+    </nav>
+
+    <!-- Menu Container -->
+    <main class="max-w-3xl mx-auto px-4 py-6">
+        <div id="menu-container" class="space-y-6"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-3xl mx-auto px-4 py-8 text-center border-t border-white/10 mt-8">
+        <div class="bg-navy/60 rounded-2xl p-6 border border-brandYellow/25 shadow-inner">
+            <p class="text-brandYellow text-sm font-bold mb-1">مرحباً بكم في مطعم هرم القاهرة</p>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-wide">
+                إدارة الحاج / محمد أبو نور
+            </h2>
+            <p class="text-gray-400 text-xs mt-3">نجران - مفرق الخميس - خلف مستوصف السلامة - شارع السمك</p>
+        </div>
+    </footer>
+
+    <!-- Floating Cart Bar -->
+    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-terracotta text-white p-3 shadow-2xl transform translate-y-full transition-transform duration-300 z-40">
+        <div class="max-w-3xl mx-auto flex items-center justify-between px-2">
+            <div class="flex items-center gap-3">
+                <div class="bg-navyDark text-brandYellow font-black w-10 h-10 rounded-full flex items-center justify-center text-lg shadow" id="cart-count">0</div>
+                <div>
+                    <p class="text-xs text-white/90 font-semibold">إجمالي الطلب</p>
+                    <p class="text-lg font-black"><span id="cart-total">0</span> ريال</p>
+                </div>
+            </div>
+            <button onclick="openCartModal()" class="bg-brandYellow text-navyDark font-black px-6 py-2.5 rounded-xl shadow-lg hover:bg-yellow-300 transition flex items-center gap-2">
+                <span>إتمام الطلب</span>
+                <span>⬅️</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart & Checkout Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-navy w-full max-w-lg rounded-t-3xl sm:rounded-2xl max-h-[90vh] flex flex-col border border-white/15 shadow-2xl overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="p-4 bg-navyDark border-b border-white/10 flex items-center justify-between">
+                <h3 class="text-lg font-black text-brandYellow">سلة الطلبات وإتمام المراجعة</h3>
+                <button onclick="closeCartModal()" class="text-gray-400 hover:text-white text-2xl font-bold px-2">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 overflow-y-auto space-y-4 flex-1">
+                <div id="cart-items-list" class="space-y-3"></div>
+
+                <!-- Customer Details & Location -->
+                <div class="border-t border-white/10 pt-4 space-y-3">
+                    <h4 class="font-bold text-sm text-brandYellow">بيانات التوصيل والعميل:</h4>
+                    
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">اسم العميل</label>
+                        <input type="text" id="cust-name" placeholder="اكتب اسمك الكريم..." class="w-full bg-navyDark border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brandYellow">
+                    </div>
+
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">نوع الطلب</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="btn-delivery" onclick="setOrderType('توصيل')" class="bg-brandYellow text-navyDark font-bold py-2 rounded-xl text-sm border border-brandYellow">🛵 توصيل للموقع</button>
+                            <button type="button" id="btn-pickup" onclick="setOrderType('استلام من المطعم')" class="bg-navyDark text-white font-bold py-2 rounded-xl text-sm border border-white/20">🏪 استلام من الفرع</button>
+                        </div>
+                    </div>
+
+                    <div id="address-field">
+                        <label class="text-xs text-gray-300 block mb-1">📍 موقع العميل / تفاصيل العنوان بالتفصيل أو رابط الموقع</label>
+                        <textarea id="cust-address" rows="2" placeholder="اكتب الحي، الشارع، رقم الحوش، أو الصق رابط موقعك من خرائط جوجل هنا..." class="w-full bg-navyDark border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brandYellow"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">📝 ملاحظات عامة على الطلب أو إضافات خاصة</label>
+                        <textarea id="cust-notes" rows="2" placeholder="مثال: زيادة شطة خارجيه، بدون بصل، خبز إضافي..." class="w-full bg-navyDark border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brandYellow"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-navyDark border-t border-white/10">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-gray-300 font-bold">الإجمالي النهائي:</span>
+                    <span class="text-xl font-black text-brandYellow"><span id="modal-total">0</span> ريال</span>
+                </div>
+                <button onclick="sendOrderToWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                    <span>إرسال الطلب عبر واتساب</span>
+                    <span>📲</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Modal -->
+    <div id="inquiry-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-navy w-full max-w-md rounded-2xl border border-white/15 shadow-2xl overflow-hidden">
+            <div class="p-4 bg-navyDark border-b border-white/10 flex items-center justify-between">
+                <h3 class="text-lg font-black text-brandYellow">استفسار أو طلب خاص</h3>
+                <button onclick="closeInquiryModal()" class="text-gray-400 hover:text-white text-2xl font-bold px-2">&times;</button>
+            </div>
+            <div class="p-4 space-y-3">
+                <p class="text-xs text-gray-300">أكتب استفسارك وسيتم توجيهك مباشرة لمحادثة الواتساب مع المطعم:</p>
+                <div>
+                    <label class="text-xs text-gray-300 block mb-1">اسمك الكريم</label>
+                    <input type="text" id="inq-name" placeholder="اسمك..." class="w-full bg-navyDark border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brandYellow">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-300 block mb-1">نص الاستفسار أو الطلب</label>
+                    <textarea id="inq-text" rows="3" placeholder="مثال: هل يتوفر لديكم حجز عزائم ولائم غداً؟..." class="w-full bg-navyDark border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brandYellow"></textarea>
+                </div>
+            </div>
+            <div class="p-4 bg-navyDark border-t border-white/10">
+                <button onclick="sendInquiryToWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                    <span>إرسال الاستفسار للواتساب</span>
+                    <span>💬</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = [
+            { id: 'k1', category: 'koshary', categoryTitle: 'الكشري المصري', name: 'كشري هرم القاهرة', desc: 'كشري مصري أصلي بالدقة والصلصة والتقلية', price: 10 },
+            { id: 'k2', category: 'koshary', categoryTitle: 'الكشري المصري', name: 'كشري مخصوص', desc: 'حجم أكبر مع الخلطة المميزة', price: 15 },
+            { id: 'k3', category: 'koshary', categoryTitle: 'الكشري المصري', name: 'كشري جامبو', desc: 'حجم عائلي كبير ومشبع', price: 20 },
+            { id: 'k4', category: 'koshary', categoryTitle: 'الكشري المصري', name: 'إضافة كبدة على الكشري', desc: 'تُضاف فوق طلب الكشري', price: 5 },
+
+            { id: 'm1', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'طاجن عكاوي', desc: 'يُقدم مع الأرز والملوخية والشوربة', price: 55 },
+            { id: 'm2', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'ورقة لحمة استيك (نصف كيلو لحم)', desc: 'تُقدم مع الأرز والملوخية والشوربة', price: 50 },
+            { id: 'm3', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'ورقة كبدة', desc: 'تُقدم مع الأرز والملوخية والشوربة', price: 30 },
+            { id: 'm4', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'موزة ضاني (مع الفتة)', desc: 'تُقدم مع الفتة والملوخية والشوربة', price: 55 },
+            { id: 'm5', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'موزة ضاني (مع الخضار)', desc: 'تُقدم مع الأرز والخضار والملوخية والشوربة', price: 55 },
+            { id: 'm6', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة مخصوص 4 قطع (مع الفتة)', desc: 'تُقدم مع الفتة والملوخية والشوربة', price: 40 },
+            { id: 'm7', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة سوبر 2 قطعة (مع الفتة)', desc: 'تُقدم مع الفتة والملوخية والشوربة', price: 27 },
+            { id: 'm8', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة مخصوص محمر 4 قطع (مع الخضار)', desc: 'تُقدم مع الخضار والأرز والملوخية والشوربة', price: 40 },
+            { id: 'm9', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة سوبر محمر 2 قطعة (مع الخضار)', desc: 'تُقدم مع الخضار والأرز والملوخية والشوربة', price: 27 },
+            { id: 'm10', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة مخصوص 4 قطع (مع الأرز والخضار)', desc: 'تُقدم مع الأرز والخضار والملوخية والشوربة', price: 40 },
+            { id: 'm11', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'لحمة سوبر 2 قطعة (مع الأرز والخضار)', desc: 'تُقدم مع الأرز والخضار والملوخية والشوربة', price: 27 },
+            { id: 'm12', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'كوارع مع الفتة', desc: 'وجبة كوارع طازجة مع الفتة المصرية', price: 40 },
+            { id: 'm13', category: 'meat', categoryTitle: 'وجبات اللحوم', name: 'كوارع مع الشوربة بدون فتة', desc: 'كوارع صافي مع الشوربة', price: 35 },
+
+            { id: 'p1', category: 'poultry', categoryTitle: 'وجبات الدجاج والبط', name: 'ربع دجاج فرن', desc: 'مع البطاطس والأرز والملوخية والشوربة', price: 17 },
+            { id: 'p2', category: 'poultry', categoryTitle: 'وجبات الدجاج والبط', name: 'ربع دجاج محمر', desc: 'مع الخضار والأرز والملوخية والشوربة', price: 17 },
+            { id: 'p3', category: 'poultry', categoryTitle: 'وجبات الدجاج والبط', name: 'ربع بط محمر', desc: 'مع الأرز والخضار والملوخية والشوربة', price: 40 },
+
+            { id: 's1', category: 'samin', categoryTitle: 'وجبات السمين', name: 'طلب مشكل مع الشوربة', desc: 'تشكيلة سمين مميزة مع الشوربة', price: 17 },
+            { id: 's2', category: 'samin', categoryTitle: 'وجبات السمين', name: 'طلب كبدة إسكندراني مع الشوربة', desc: 'كبدة على الطريقة الإسكندرانية مع الشوربة', price: 17 },
+            { id: 's3', category: 'samin', categoryTitle: 'وجبات السمين', name: 'طلب ممبار مع الشوربة', desc: 'ممبار محشي ومحمر مع الشوربة', price: 17 },
+            { id: 's4', category: 'samin', categoryTitle: 'وجبات السمين', name: 'طلب لحمة راس أو مشكل مخصوص', desc: 'يُقدم مع الشوربة', price: 20 },
+            { id: 's5', category: 'samin', categoryTitle: 'وجبات السمين', name: 'طلب كفتة أو مشكل (بدون فشة)', desc: 'بدون فشة - يُقدم مع الشوربة', price: 20 },
+
+            { id: 'sw1', category: 'sandwiches', categoryTitle: 'السندوتشات', name: 'رغيف حواوشي', desc: 'حواوشي مصري متبل مخبوز على الأصول', price: 10 },
+            { id: 'sw2', category: 'sandwiches', categoryTitle: 'السندوتشات', name: 'رغيف كبدة إسكندراني', desc: '', price: 10 },
+            { id: 'sw3', category: 'sandwiches', categoryTitle: 'السندوتشات', name: 'رغيف مشكل', desc: '', price: 10 },
+            { id: 'sw4', category: 'sandwiches', categoryTitle: 'السندوتشات', name: 'رغيف لحمة راس', desc: '', price: 15 },
+            { id: 'sw5', category: 'sandwiches', categoryTitle: 'السندوتشات', name: 'رغيف مشكل مخصوص', desc: '', price: 15 },
+
+            { id: 'a1_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'ملوخية (صغير)', desc: '', price: 3 },
+            { id: 'a1_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'ملوخية (كبير)', desc: '', price: 5 },
+            { id: 'a2_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'فاصوليا بيضاء (صغير)', desc: '', price: 3 },
+            { id: 'a2_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'فاصوليا بيضاء (كبير)', desc: '', price: 5 },
+            { id: 'a3_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'بطاطس فرن (صغير)', desc: '', price: 3 },
+            { id: 'a3_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'بطاطس فرن (كبير)', desc: '', price: 5 },
+            { id: 'a4_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'خضار مشكل (صغير)', desc: '', price: 3 },
+            { id: 'a4_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'خضار مشكل (كبير)', desc: '', price: 5 },
+            { id: 'a5_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'أرز مصري (صغير)', desc: '', price: 6 },
+            { id: 'a5_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'أرز مصري (كبير)', desc: '', price: 10 },
+            { id: 'a6', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'فتة سادة', desc: '', price: 10 },
+            { id: 'a7_s', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'شوربة لسان عصفور (صغير)', desc: '', price: 3 },
+            { id: 'a7_l', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'شوربة لسان عصفور (كبير)', desc: '', price: 5 },
+            { id: 'a8', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'شوربة كوارع سادة', desc: '', price: 5 },
+            { id: 'a9', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'سلطة خضراء', desc: '', price: 5 },
+            { id: 'a10', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'طحينة', desc: '', price: 5 },
+            { id: 'a11', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'مخلل', desc: '', price: 4 },
+            { id: 'a12', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'مشروب غازي', desc: '', price: 3 },
+            { id: 'a13', category: 'addons', categoryTitle: 'الإضافات والمشروبات', name: 'مياه', desc: '', price: 1 },
+        ];
+
+        let cart = {};
+        let currentCategory = 'all';
+        let orderType = 'توصيل';
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            const categories = ['koshary', 'meat', 'poultry', 'samin', 'sandwiches', 'addons'];
+            const filteredCategories = currentCategory === 'all' ? categories : [currentCategory];
+
+            filteredCategories.forEach(cat => {
+                const items = menuData.filter(item => item.category === cat);
+                if (items.length === 0) return;
+
+                const section = document.createElement('div');
+                section.innerHTML = `
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-brandRed text-white font-black px-4 py-1 rounded-full text-base border border-white/20 shadow">${items[0].categoryTitle}</span>
+                        <div class="h-0.5 bg-terracotta/50 flex-1"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${items.map(item => {
+                            const qty = cart[item.id] ? cart[item.id].qty : 0;
+                            return `
+                                <div class="menu-card rounded-2xl p-4 flex flex-col justify-between gap-3 shadow">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div class="flex-1">
+                                            <h3 class="font-bold text-white text-base">${item.name}</h3>
+                                            ${item.desc ? `<p class="text-xs text-brandYellow/90 mt-0.5">${item.desc}</p>` : ''}
+                                            <p class="text-terracotta font-black text-base mt-1"><span class="text-white">${item.price}</span> ريال</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            ${qty > 0 ? `
+                                                <button onclick="updateQty('${item.id}', -1)" class="w-8 h-8 rounded-xl bg-navyDark border border-white/20 text-white font-black flex items-center justify-center hover:bg-red-600 transition">-</button>
+                                                <span class="font-black text-brandYellow w-5 text-center">${qty}</span>
+                                            ` : ''}
+                                            <button onclick="updateQty('${item.id}', 1)" class="px-3 h-9 rounded-xl bg-brandYellow text-navyDark font-black flex items-center justify-center hover:bg-yellow-300 transition text-sm shadow">
+                                                ${qty > 0 ? '+' : '+ أضف'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    ${qty > 0 ? `
+                                        <div class="pt-2 border-t border-white/10">
+                                            <input type="text" placeholder="ملاحظة للصنف (مثال: بدون بصل، زيادة دقة...)" value="${cart[item.id].note || ''}" onchange="updateItemNote('${item.id}', this.value)" class="w-full bg-navyDark border border-white/15 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-brandYellow">
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        function filterMenu(cat) {
+            currentCategory = cat;
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMenu();
+        }
+
+        function updateQty(id, delta) {
+            if (!cart[id]) {
+                cart[id] = { qty: 0, note: '' };
+            }
+            cart[id].qty += delta;
+            if (cart[id].qty <= 0) {
+                delete cart[id];
+            }
+            renderMenu();
+            updateCartUI();
+        }
+
+        function updateItemNote(id, note) {
+            if (cart[id]) {
+                cart[id].note = note;
+            }
+        }
+
+        function updateCartUI() {
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            Object.keys(cart).forEach(id => {
+                const item = menuData.find(i => i.id === id);
+                if (item) {
+                    totalCount += cart[id].qty;
+                    totalPrice += item.price * cart[id].qty;
+                }
+            });
+
+            document.getElementById('cart-count').innerText = totalCount;
+            document.getElementById('cart-total').innerText = totalPrice;
+            document.getElementById('modal-total').innerText = totalPrice;
+
+            const cartBar = document.getElementById('cart-bar');
+            if (totalCount > 0) {
+                cartBar.classList.remove('translate-y-full');
+            } else {
+                cartBar.classList.add('translate-y-full');
+                closeCartModal();
+            }
+
+            renderCartModalItems();
+        }
+
+        function renderCartModalItems() {
+            const list = document.getElementById('cart-items-list');
+            list.innerHTML = '';
+
+            Object.keys(cart).forEach(id => {
+                const item = menuData.find(i => i.id === id);
+                const cartItem = cart[id];
+                if (!item) return;
+
+                const row = document.createElement('div');
+                row.className = 'bg-navyDark p-3 rounded-xl border border-white/10 space-y-2';
+                row.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-sm text-white">${item.name}</p>
+                            <p class="text-xs text-brandYellow">${item.price} ريال × ${cartItem.qty} = ${item.price * cartItem.qty} ريال</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty('${item.id}', -1)" class="w-7 h-7 rounded-lg bg-navy border border-white/20 text-white font-bold">-</button>
+                            <span class="font-black text-sm w-4 text-center">${cartItem.qty}</span>
+                            <button onclick="updateQty('${item.id}', 1)" class="w-7 h-7 rounded-lg bg-brandYellow text-navyDark font-bold">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="ملاحظة خاصة بهذا الصنف..." value="${cartItem.note}" onchange="updateItemNote('${item.id}', this.value)" class="w-full bg-navy border border-white/15 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-brandYellow">
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function openCartModal() {
+            document.getElementById('cart-modal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        function openInquiryModal() {
+            document.getElementById('inquiry-modal').classList.remove('hidden');
+        }
+
+        function closeInquiryModal() {
+            document.getElementById('inquiry-modal').classList.add('hidden');
+        }
+
+        function setOrderType(type) {
+            orderType = type;
+            const btnDelivery = document.getElementById('btn-delivery');
+            const btnPickup = document.getElementById('btn-pickup');
+            const addressField = document.getElementById('address-field');
+
+            if (type === 'توصيل') {
+                btnDelivery.className = 'bg-brandYellow text-navyDark font-bold py-2 rounded-xl text-sm border border-brandYellow';
+                btnPickup.className = 'bg-navyDark text-white font-bold py-2 rounded-xl text-sm border border-white/20';
+                addressField.style.display = 'block';
+            } else {
+                btnPickup.className = 'bg-brandYellow text-navyDark font-bold py-2 rounded-xl text-sm border border-brandYellow';
+                btnDelivery.className = 'bg-navyDark text-white font-bold py-2 rounded-xl text-sm border border-white/20';
+                addressField.style.display = 'none';
+            }
+        }
+
+        function sendOrderToWhatsApp() {
+            const name = document.getElementById('cust-name').value.trim() || 'عميل';
+            const address = document.getElementById('cust-address').value.trim();
+            const notes = document.getElementById('cust-notes').value.trim();
+
+            if (orderType === 'توصيل' && !address) {
+                alert('يرجى كتابة أو إرسال موقعك بالتفصيل لتوصيل الطلب.');
+                return;
+            }
+
+            let totalPrice = 0;
+            let itemsText = '';
+
+            Object.keys(cart).forEach((id, idx) => {
+                const item = menuData.find(i => i.id === id);
+                const cartItem = cart[id];
+                const subTotal = item.price * cartItem.qty;
+                totalPrice += subTotal;
+                itemsText += `${idx + 1}. *${item.name}* (العدد: ${cartItem.qty}) - ${subTotal} ريال\n`;
+                if (cartItem.note) {
+                    itemsText += `   └ 📝 ملاحظة: ${cartItem.note}\n`;
+                }
+            });
+
+            let msg = `*طلب جديد - مطعم هرم القاهرة* 🔺\n`;
+            msg += `------------------------------\n`;
+            msg += `👤 *الاسم:* ${name}\n`;
+            msg += `🛵 *نوع الطلب:* ${orderType}\n`;
+            if (orderType === 'توصيل') {
+                msg += `📍 *موقع العميل / العنوان:* ${address}\n`;
+            }
+            msg += `------------------------------\n`;
+            msg += `📋 *الطلبات:*\n${itemsText}`;
+            msg += `------------------------------\n`;
+            msg += `💰 *الإجمالي:* ${totalPrice} ريال\n`;
+            if (notes) {
+                msg += `📝 *ملاحظات عامة:* ${notes}\n`;
+            }
+
+            const phone = '966548108774';
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function sendInquiryToWhatsApp() {
+            const name = document.getElementById('inq-name').value.trim() || 'عميل';
+            const text = document.getElementById('inq-text').value.trim();
+
+            if (!text) {
+                alert('يرجى كتابة نص الاستفسار.');
+                return;
+            }
+
+            let msg = `*استفسار جديد - مطعم هرم القاهرة* 💬\n`;
+            msg += `👤 *الاسم:* ${name}\n`;
+            msg += `❓ *النص:* ${text}\n`;
+
+            const phone = '966548108774';
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        renderMenu();
+    </script>
+</body>
+</html>
