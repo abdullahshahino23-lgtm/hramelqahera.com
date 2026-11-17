@@ -1,1 +1,26 @@
-{"background_color":"#1b223d","description":"منيو مطعم هرم القاهرة والطلب المباشر - نجران","dir":"rtl","display":"standalone","lang":"ar","name":"مطعم هرم القاهرة","scope":"./","short_name":"هرم القاهرة","start_url":"./index.html","theme_color":"#1b223d"}
+{
+  "background_color": "#1b223d",
+  "description": "منيو مطعم هرم القاهرة والطلب المباشر - نجران",
+  "dir": "rtl",
+  "display": "standalone",
+  "lang": "ar",
+  "name": "مطعم هرم القاهرة",
+  "scope": "./",
+  "short_name": "هرم القاهرة",
+  "start_url": "./index.html",
+  "theme_color": "#1b223d",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

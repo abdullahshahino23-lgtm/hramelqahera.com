@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.use_as_origin"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.hramelqahera.app",
+      "sha256_cert_fingerprints": ["E7:35:03:50:1F:ED:A1:AD:4F:52:8D:25:A1:B9:52:FB:48:A9:86:D2:83:75:DD:3B:37:D1:60:B0:13:22:04:AB"]
+    }
+  }
+]
