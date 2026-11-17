@@ -114,6 +114,7 @@
             <button onclick="filterMenu('samin')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">وجبات السمين</button>
             <button onclick="filterMenu('sandwiches')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">السندوتشات</button>
             <button onclick="filterMenu('addons')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">الإضافات والمشروبات</button>
+            <button onclick="filterMenu('new')" class="category-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold bg-navy text-white transition">🆕 الجديد</button>
         </div>
     </nav>
 
@@ -302,10 +303,27 @@
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
 
-            const categories = ['koshary', 'meat', 'poultry', 'samin', 'sandwiches', 'addons'];
+            const categories = ['koshary', 'meat', 'poultry', 'samin', 'sandwiches', 'addons', 'new'];
             const filteredCategories = currentCategory === 'all' ? categories : [currentCategory];
 
             filteredCategories.forEach(cat => {
+                if (cat === 'new') {
+                    const section = document.createElement('div');
+                    section.innerHTML = `
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-brandRed text-white font-black px-4 py-1 rounded-full text-base border border-white/20 shadow">الجديد</span>
+                        <div class="h-0.5 bg-terracotta/50 flex-1"></div>
+                    </div>
+                    <div class="menu-card rounded-2xl p-8 text-center shadow">
+                        <p class="text-5xl mb-3">✨</p>
+                        <h3 class="font-black text-2xl text-brandYellow">قريباً الجديد</h3>
+                        <p class="text-sm text-gray-300 mt-2">وجبات وأصناف جديدة قريباً في مطعم هرم القاهرة — تابعونا</p>
+                    </div>
+                `;
+                    container.appendChild(section);
+                    return;
+                }
+
                 const items = menuData.filter(item => item.category === cat);
                 if (items.length === 0) return;
 
