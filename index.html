@@ -487,13 +487,22 @@
             }
         }
 
+        let toastTimer = null;
+        function showMsg(text) {
+            const el = document.getElementById('toast-msg');
+            el.textContent = text;
+            el.style.display = 'block';
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+        }
+
         function sendOrderToWhatsApp() {
             const name = document.getElementById('cust-name').value.trim() || 'عميل';
             const address = document.getElementById('cust-address').value.trim();
             const notes = document.getElementById('cust-notes').value.trim();
 
             if (orderType === 'توصيل' && !address) {
-                alert('يرجى كتابة أو إرسال موقعك بالتفصيل لتوصيل الطلب.');
+                showMsg('يرجى كتابة أو إرسال موقعك بالتفصيل لتوصيل الطلب.');
                 return;
             }
 
@@ -539,7 +548,7 @@
             const text = document.getElementById('inq-text').value.trim();
 
             if (!text) {
-                alert('يرجى كتابة نص الاستفسار.');
+                showMsg('يرجى كتابة نص الاستفسار.');
                 return;
             }
 
@@ -554,5 +563,6 @@
 
         renderMenu();
     </script>
+    <div id="toast-msg" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1b223d;color:#f7d117;padding:12px 20px;border-radius:14px;font-weight:700;font-size:15px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.35);text-align:center;max-width:90%;"></div>
 </body>
 </html>
